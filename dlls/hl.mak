@@ -174,7 +174,7 @@ CLEAN :
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /G5 /MT /W3 /GX /Zi /O2 /I "..\engine" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "QUIVER" /D "VOXEL" /D "QUAKE2" /D "VALVE_DLL" /YX /c
 # SUBTRACT CPP /Fr
-CPP_PROJ=/nologo /G5 /MT /W3 /GX /Zi /O2 /I "..\engine" /D "NDEBUG" /D "WIN32"\
+CPP_PROJ=/nologo /G5 /MT /W3 /GX /Zi /O2 /I "..\dlls" /I "..\engine" /I "..\common" /I "..\pm_shared" /I "..\\" /D "NDEBUG" /D "WIN32"\
  /D "_WINDOWS" /D "QUIVER" /D "VOXEL" /D "QUAKE2" /D "VALVE_DLL"\
  /Fp"$(INTDIR)/hl.pch" /YX /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
 CPP_OBJS=.\Releasehl/
@@ -297,7 +297,11 @@ LINK32_OBJS= \
 	"$(INTDIR)\world.obj" \
 	"$(INTDIR)\WXDEBUG.OBJ" \
 	"$(INTDIR)\xen.obj" \
-	"$(INTDIR)\zombie.obj"
+	"$(INTDIR)\zombie.obj" \
+	"$(INTDIR)\killcounter.obj" \
+	"$(INTDIR)\pm_debug.obj" \
+	"$(INTDIR)\pm_math.obj" \
+	"$(INTDIR)\pm_shared.obj"
 
 "$(OUTDIR)\hl.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -544,7 +548,7 @@ CLEAN :
 
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\engine" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "QUIVER" /D "VOXEL" /D "QUAKE2" /D "VALVE_DLL" /FR /YX /c
-CPP_PROJ=/nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\engine" /D "_DEBUG" /D\
+CPP_PROJ=/nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\dlls" /I "..\engine" /I "..\common" /I "..\pm_shared" /I "..\\" /D "_DEBUG" /D\
  "WIN32" /D "_WINDOWS" /D "QUIVER" /D "VOXEL" /D "QUAKE2" /D "VALVE_DLL"\
  /FR"$(INTDIR)/" /Fp"$(INTDIR)/hl.pch" /YX /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
 CPP_OBJS=.\debughl/
@@ -669,7 +673,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /profile
 LINK32_FLAGS=user32.lib advapi32.lib /nologo /subsystem:windows /dll\
  /incremental:yes /pdb:"$(OUTDIR)/hl.pdb" /debug /machine:I386 /def:".\hl.def"\
- /out:"$(OUTDIR)/hl.dll" /implib:"Debug/hl.lib" 
+ /out:"$(OUTDIR)/hl.dll" /implib:"$(OUTDIR)/hl.lib" 
 LINK32_OBJS= \
 	"$(INTDIR)\aflock.obj" \
 	"$(INTDIR)\agrunt.obj" \
@@ -768,7 +772,11 @@ LINK32_OBJS= \
 	"$(INTDIR)\world.obj" \
 	"$(INTDIR)\WXDEBUG.OBJ" \
 	"$(INTDIR)\xen.obj" \
-	"$(INTDIR)\zombie.obj"
+	"$(INTDIR)\zombie.obj" \
+	"$(INTDIR)\killcounter.obj" \
+	"$(INTDIR)\pm_debug.obj" \
+	"$(INTDIR)\pm_math.obj" \
+	"$(INTDIR)\pm_shared.obj"
 
 "$(OUTDIR)\hl.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -16298,6 +16306,50 @@ DEP_CPP_ANIMAT=\
 
 
 !ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\killcounter.cpp
+
+"$(INTDIR)\killcounter.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\killcounter.sbr" : $(SOURCE) "$(INTDIR)"
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=..\pm_shared\pm_debug.c
+
+"$(INTDIR)\pm_debug.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\pm_debug.sbr" : $(SOURCE) "$(INTDIR)"
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=..\pm_shared\pm_math.c
+
+"$(INTDIR)\pm_math.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\pm_math.sbr" : $(SOURCE) "$(INTDIR)"
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=..\pm_shared\pm_shared.c
+
+"$(INTDIR)\pm_shared.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\pm_shared.sbr" : $(SOURCE) "$(INTDIR)"
 
 # End Source File
 # End Target

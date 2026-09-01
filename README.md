@@ -1,6 +1,35 @@
 # Half-Life Kill Counter mod
 Kill Counter mod for Half-Life 1. Based on SDK 2.1 for bxt compatibility.
 
+## Building in VS Code
+
+### Windows
+
+- Use task `Build both Debug DLLs` to build `cl_dll` and `dlls`
+- The helper script `.vscode/invoke-nmake.ps1` auto-detects Visual Studio Build Tools
+- Older MSVC is preferred by default through `.vscode/legacy-msvc.bat` (VS2008 -> VS2005 -> VS2003)
+- If no legacy toolchain is found, tasks automatically fall back to the modern Visual Studio Build Tools environment
+- Edit `.vscode/legacy-msvc.bat` if your legacy compiler is installed in a custom location
+- To override this, set environment variable `HL_TOOLCHAIN_BAT` to your compiler setup batch file path before starting VS Code
+- If you want VS2003 compilers, headers and whatever `legacy-msvc.bat` uses, I'm using exactly these:
+  - Microsoft Platform SDK: https://www.microsoft.com/en-us/download/details.aspx?id=15656
+  - Microsoft Visual Studio .NET 2003 Professional: https://archive.org/details/microsoft-visual-studio-.-net-2003-professional-disc-1
+  - Microsoft Visual C++ Toolkit 2003: https://archive.org/details/microsoft-visual-c-toolkit-2003
+
+Example (PowerShell):
+
+```powershell
+$env:HL_TOOLCHAIN_BAT = 'C:\LegacyVC\Bin\vcvars32.bat'
+code .
+```
+
+### Debian/Linux
+
+- Use task `Build Debian dlls (hl_i386.so)` for the server game DLL in `dlls/Makefile`
+- Use task `Build Debian dedicated (hlds_run)` for the dedicated launcher in `dedicated/Makefile`
+- Use task `Build Debian all` to run both
+- Note: this repository does not include a Linux Makefile for `cl_dll` (client DLL), only for server-side targets
+
 Half Life 1 SDK LICENSE
 ======================
 

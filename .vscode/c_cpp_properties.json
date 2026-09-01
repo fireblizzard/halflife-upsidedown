@@ -1,0 +1,100 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "HL Client (cl_dll Debug)",
+      "intelliSenseMode": "windows-msvc-x64",
+      "compilerPath": "cl.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "defines": [
+        "WIN32",
+        "_DEBUG",
+        "_WINDOWS",
+        "_MBCS"
+      ],
+      "includePath": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/cl_dll",
+        "${workspaceFolder}/cl_dll/hl",
+        "${workspaceFolder}/dlls",
+        "${workspaceFolder}/engine",
+        "${workspaceFolder}/common",
+        "${workspaceFolder}/pm_shared",
+        "${workspaceFolder}/utils/vgui/include"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}/cl_dll",
+          "${workspaceFolder}/cl_dll/hl",
+          "${workspaceFolder}/dlls",
+          "${workspaceFolder}/engine",
+          "${workspaceFolder}/common",
+          "${workspaceFolder}/pm_shared",
+          "${workspaceFolder}/utils/vgui/include"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    },
+    {
+      "name": "HL Server (dlls Debug)",
+      "intelliSenseMode": "windows-msvc-x64",
+      "compilerPath": "cl.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "defines": [
+        "WIN32",
+        "_DEBUG",
+        "_WINDOWS",
+        "VALVE_DLL",
+        "QUIVER",
+        "VOXEL",
+        "QUAKE2"
+      ],
+      "includePath": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/dlls",
+        "${workspaceFolder}/engine",
+        "${workspaceFolder}/common",
+        "${workspaceFolder}/pm_shared"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}/dlls",
+          "${workspaceFolder}/engine",
+          "${workspaceFolder}/common",
+          "${workspaceFolder}/pm_shared"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    },
+    {
+      "name": "HL Debian Server (dlls)",
+      "intelliSenseMode": "linux-gcc-x64",
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "defines": [
+        "stricmp=strcasecmp",
+        "_strnicmp=strncasecmp",
+        "strnicmp=strncasecmp"
+      ],
+      "includePath": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/dlls",
+        "${workspaceFolder}/engine",
+        "${workspaceFolder}/common",
+        "${workspaceFolder}/pm_shared"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}/dlls",
+          "${workspaceFolder}/engine",
+          "${workspaceFolder}/common",
+          "${workspaceFolder}/pm_shared"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    }
+  ]
+}

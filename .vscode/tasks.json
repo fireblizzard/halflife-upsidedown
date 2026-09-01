@@ -1,0 +1,192 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build cl_dll Debug (client.dll)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\invoke-nmake.ps1",
+        "-WorkDir",
+        "${workspaceFolder}\\cl_dll",
+        "-Makefile",
+        "cl_dll.mak",
+        "-Config",
+        "cl_dll - Win32 Debug",
+        "-Target",
+        ".\\Debug\\client.dll"
+      ],
+      "problemMatcher": [
+        "$msCompile"
+      ],
+      "group": "build"
+    },
+    {
+      "label": "Build dlls Debug (hl.dll)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\invoke-nmake.ps1",
+        "-WorkDir",
+        "${workspaceFolder}\\dlls",
+        "-Makefile",
+        "hl.mak",
+        "-Config",
+        "hl - Win32 Debug",
+        "-Target",
+        ".\\debughl\\hl.dll"
+      ],
+      "problemMatcher": [
+        "$msCompile"
+      ],
+      "group": "build"
+    },
+    {
+      "label": "Build both Debug DLLs",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Build cl_dll Debug (client.dll)",
+        "Build dlls Debug (hl.dll)"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Rebuild both Debug DLLs",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Clean both",
+        "Build both Debug DLLs"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean cl_dll",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\invoke-nmake.ps1",
+        "-WorkDir",
+        "${workspaceFolder}\\cl_dll",
+        "-Makefile",
+        "cl_dll.mak",
+        "-Config",
+        "cl_dll - Win32 Debug",
+        "-Target",
+        "CLEAN"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean dlls",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\invoke-nmake.ps1",
+        "-WorkDir",
+        "${workspaceFolder}\\dlls",
+        "-Makefile",
+        "hl.mak",
+        "-Config",
+        "hl - Win32 Debug",
+        "-Target",
+        "CLEAN"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean both",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "Clean cl_dll",
+        "Clean dlls"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Debian dlls (hl_i386.so)",
+      "type": "shell",
+      "command": "make",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}/dlls"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "Build Debian dedicated (hlds_run)",
+      "type": "shell",
+      "command": "make",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}/dedicated"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "Build Debian all",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Build Debian dlls (hl_i386.so)",
+        "Build Debian dedicated (hlds_run)"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean Debian dlls",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/dlls"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean Debian dedicated",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean Debian all",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "Clean Debian dlls",
+        "Clean Debian dedicated"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

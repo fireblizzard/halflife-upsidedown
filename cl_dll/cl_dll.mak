@@ -68,10 +68,10 @@ CLEAN :
 	-@erase "$(INTDIR)\hud_update.obj"
 	-@erase "$(INTDIR)\menu.obj"
 	-@erase "$(INTDIR)\message.obj"
-	-@erase "$(INTDIR)\MOTD.obj"
+	-@erase "$(INTDIR)\vgui_MOTDWindow.obj"
 	-@erase "$(INTDIR)\parsemsg.obj"
 	-@erase "$(INTDIR)\saytext.obj"
-	-@erase "$(INTDIR)\scoreboard.obj"
+	-@erase "$(INTDIR)\vgui_ScorePanel.obj"
 	-@erase "$(INTDIR)\status_icons.obj"
 	-@erase "$(INTDIR)\statusbar.obj"
 	-@erase "$(INTDIR)\text_message.obj"
@@ -89,7 +89,7 @@ CLEAN :
 
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /MT /W3 /GX /Zi /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-CPP_PROJ=/nologo /MT /W3 /GX /Zi /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS"\
+CPP_PROJ=/nologo /MT /W3 /GX /Zi /O2 /I "..\utils\vgui\include" /I "..\engine" /I "..\common" /I "..\pm_shared" /I "..\dlls" /D "WIN32" /D "NDEBUG" /D "_WINDOWS"\
  /Fp"$(INTDIR)/cl_dll.pch" /YX /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.\.
@@ -108,7 +108,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib /nologo /subsystem:windows /dll /map /machine:I386 /out:"Release/client.dll"
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
- advapi32.lib shell32.lib ole32.lib /nologo /subsystem:windows /dll\
+ advapi32.lib shell32.lib ole32.lib winmm.lib ..\utils\vgui\lib\win32_vc6\vgui.lib wsock32.lib /nologo /subsystem:windows /dll\
  /incremental:no /pdb:"$(OUTDIR)/client.pdb" /map:"$(INTDIR)/client.map"\
  /machine:I386 /out:"$(OUTDIR)/client.dll" /implib:"$(OUTDIR)/client.lib" 
 LINK32_OBJS= \
@@ -127,15 +127,44 @@ LINK32_OBJS= \
 	"$(INTDIR)\hud_update.obj" \
 	"$(INTDIR)\menu.obj" \
 	"$(INTDIR)\message.obj" \
-	"$(INTDIR)\MOTD.obj" \
+	"$(INTDIR)\vgui_MOTDWindow.obj" \
 	"$(INTDIR)\parsemsg.obj" \
 	"$(INTDIR)\saytext.obj" \
-	"$(INTDIR)\scoreboard.obj" \
+	"$(INTDIR)\vgui_ScorePanel.obj" \
 	"$(INTDIR)\status_icons.obj" \
 	"$(INTDIR)\statusbar.obj" \
 	"$(INTDIR)\text_message.obj" \
 	"$(INTDIR)\train.obj" \
-	"$(INTDIR)\util.obj"
+	"$(INTDIR)\util.obj" \
+	"$(INTDIR)\com_weapons.obj" \
+	"$(INTDIR)\demo.obj" \
+	"$(INTDIR)\entity.obj" \
+	"$(INTDIR)\ev_common.obj" \
+	"$(INTDIR)\ev_hldm.obj" \
+	"$(INTDIR)\events.obj" \
+	"$(INTDIR)\hl_baseentity.obj" \
+	"$(INTDIR)\hl_events.obj" \
+	"$(INTDIR)\hl_objects.obj" \
+	"$(INTDIR)\hl_weapons.obj" \
+	"$(INTDIR)\hud_servers.obj" \
+	"$(INTDIR)\in_camera.obj" \
+	"$(INTDIR)\input.obj" \
+	"$(INTDIR)\inputw32.obj" \
+	"$(INTDIR)\tri.obj" \
+	"$(INTDIR)\vgui_ClassMenu.obj" \
+	"$(INTDIR)\vgui_ConsolePanel.obj" \
+	"$(INTDIR)\vgui_ControlConfigPanel.obj" \
+	"$(INTDIR)\vgui_CustomObjects.obj" \
+	"$(INTDIR)\vgui_int.obj" \
+	"$(INTDIR)\vgui_SchemeManager.obj" \
+	"$(INTDIR)\vgui_ServerBrowser.obj" \
+	"$(INTDIR)\vgui_TeamFortressViewport.obj" \
+	"$(INTDIR)\vgui_teammenu.obj" \
+	"$(INTDIR)\view.obj" \
+	"$(INTDIR)\hl_wpn_glock.obj" \
+	"$(INTDIR)\pm_debug.obj" \
+	"$(INTDIR)\pm_math.obj" \
+	"$(INTDIR)\pm_shared.obj"
 
 "$(OUTDIR)\client.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -201,14 +230,14 @@ CLEAN :
 	-@erase "$(INTDIR)\menu.sbr"
 	-@erase "$(INTDIR)\message.obj"
 	-@erase "$(INTDIR)\message.sbr"
-	-@erase "$(INTDIR)\MOTD.obj"
-	-@erase "$(INTDIR)\MOTD.sbr"
+	-@erase "$(INTDIR)\vgui_MOTDWindow.obj"
+	-@erase "$(INTDIR)\vgui_MOTDWindow.sbr"
 	-@erase "$(INTDIR)\parsemsg.obj"
 	-@erase "$(INTDIR)\parsemsg.sbr"
 	-@erase "$(INTDIR)\saytext.obj"
 	-@erase "$(INTDIR)\saytext.sbr"
-	-@erase "$(INTDIR)\scoreboard.obj"
-	-@erase "$(INTDIR)\scoreboard.sbr"
+	-@erase "$(INTDIR)\vgui_ScorePanel.obj"
+	-@erase "$(INTDIR)\vgui_ScorePanel.sbr"
 	-@erase "$(INTDIR)\status_icons.obj"
 	-@erase "$(INTDIR)\status_icons.sbr"
 	-@erase "$(INTDIR)\statusbar.obj"
@@ -234,7 +263,7 @@ CLEAN :
 
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR /YX /c
-CPP_PROJ=/nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D\
+CPP_PROJ=/nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\utils\vgui\include" /I "..\engine" /I "..\common" /I "..\pm_shared" /I "..\dlls" /D "WIN32" /D "_DEBUG" /D\
  "_WINDOWS" /D "_MBCS" /FR"$(INTDIR)/" /Fp"$(INTDIR)/cl_dll.pch" /YX\
  /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
 CPP_OBJS=.\Debug/
@@ -264,10 +293,10 @@ BSC32_SBRS= \
 	"$(INTDIR)\hud_update.sbr" \
 	"$(INTDIR)\menu.sbr" \
 	"$(INTDIR)\message.sbr" \
-	"$(INTDIR)\MOTD.sbr" \
+	"$(INTDIR)\vgui_MOTDWindow.sbr" \
 	"$(INTDIR)\parsemsg.sbr" \
 	"$(INTDIR)\saytext.sbr" \
-	"$(INTDIR)\scoreboard.sbr" \
+	"$(INTDIR)\vgui_ScorePanel.sbr" \
 	"$(INTDIR)\status_icons.sbr" \
 	"$(INTDIR)\statusbar.sbr" \
 	"$(INTDIR)\text_message.sbr" \
@@ -284,7 +313,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /out:"Debug/client.dll"
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
  advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
- odbccp32.lib /nologo /subsystem:windows /dll /incremental:yes\
+ odbccp32.lib winmm.lib ..\utils\vgui\lib\win32_vc6\vgui.lib wsock32.lib /nologo /subsystem:windows /dll /incremental:yes\
  /pdb:"$(OUTDIR)/client.pdb" /debug /machine:I386 /out:"$(OUTDIR)/client.dll"\
  /implib:"$(OUTDIR)/client.lib" 
 LINK32_OBJS= \
@@ -303,15 +332,44 @@ LINK32_OBJS= \
 	"$(INTDIR)\hud_update.obj" \
 	"$(INTDIR)\menu.obj" \
 	"$(INTDIR)\message.obj" \
-	"$(INTDIR)\MOTD.obj" \
+	"$(INTDIR)\vgui_MOTDWindow.obj" \
 	"$(INTDIR)\parsemsg.obj" \
 	"$(INTDIR)\saytext.obj" \
-	"$(INTDIR)\scoreboard.obj" \
+	"$(INTDIR)\vgui_ScorePanel.obj" \
 	"$(INTDIR)\status_icons.obj" \
 	"$(INTDIR)\statusbar.obj" \
 	"$(INTDIR)\text_message.obj" \
 	"$(INTDIR)\train.obj" \
-	"$(INTDIR)\util.obj"
+	"$(INTDIR)\util.obj" \
+	"$(INTDIR)\com_weapons.obj" \
+	"$(INTDIR)\demo.obj" \
+	"$(INTDIR)\entity.obj" \
+	"$(INTDIR)\ev_common.obj" \
+	"$(INTDIR)\ev_hldm.obj" \
+	"$(INTDIR)\events.obj" \
+	"$(INTDIR)\hl_baseentity.obj" \
+	"$(INTDIR)\hl_events.obj" \
+	"$(INTDIR)\hl_objects.obj" \
+	"$(INTDIR)\hl_weapons.obj" \
+	"$(INTDIR)\hud_servers.obj" \
+	"$(INTDIR)\in_camera.obj" \
+	"$(INTDIR)\input.obj" \
+	"$(INTDIR)\inputw32.obj" \
+	"$(INTDIR)\tri.obj" \
+	"$(INTDIR)\vgui_ClassMenu.obj" \
+	"$(INTDIR)\vgui_ConsolePanel.obj" \
+	"$(INTDIR)\vgui_ControlConfigPanel.obj" \
+	"$(INTDIR)\vgui_CustomObjects.obj" \
+	"$(INTDIR)\vgui_int.obj" \
+	"$(INTDIR)\vgui_SchemeManager.obj" \
+	"$(INTDIR)\vgui_ServerBrowser.obj" \
+	"$(INTDIR)\vgui_TeamFortressViewport.obj" \
+	"$(INTDIR)\vgui_teammenu.obj" \
+	"$(INTDIR)\view.obj" \
+	"$(INTDIR)\hl_wpn_glock.obj" \
+	"$(INTDIR)\pm_debug.obj" \
+	"$(INTDIR)\pm_math.obj" \
+	"$(INTDIR)\pm_shared.obj"
 
 "$(OUTDIR)\client.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -912,7 +970,7 @@ DEP_CPP_MESSA=\
 ################################################################################
 # Begin Source File
 
-SOURCE=.\scoreboard.cpp
+SOURCE=.\vgui_ScorePanel.cpp
 DEP_CPP_SCORE=\
 	"..\dlls\cdll_dll.h"\
 	"..\engine\cdll_int.h"\
@@ -928,15 +986,15 @@ DEP_CPP_SCORE=\
 !IF  "$(CFG)" == "cl_dll - Win32 Release"
 
 
-"$(INTDIR)\scoreboard.obj" : $(SOURCE) $(DEP_CPP_SCORE) "$(INTDIR)"
+"$(INTDIR)\vgui_ScorePanel.obj" : $(SOURCE) $(DEP_CPP_SCORE) "$(INTDIR)"
 
 
 !ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
 
 
-"$(INTDIR)\scoreboard.obj" : $(SOURCE) $(DEP_CPP_SCORE) "$(INTDIR)"
+"$(INTDIR)\vgui_ScorePanel.obj" : $(SOURCE) $(DEP_CPP_SCORE) "$(INTDIR)"
 
-"$(INTDIR)\scoreboard.sbr" : $(SOURCE) $(DEP_CPP_SCORE) "$(INTDIR)"
+"$(INTDIR)\vgui_ScorePanel.sbr" : $(SOURCE) $(DEP_CPP_SCORE) "$(INTDIR)"
 
 
 !ENDIF 
@@ -945,7 +1003,7 @@ DEP_CPP_SCORE=\
 ################################################################################
 # Begin Source File
 
-SOURCE=.\MOTD.cpp
+SOURCE=.\vgui_MOTDWindow.cpp
 DEP_CPP_MOTD_=\
 	"..\dlls\cdll_dll.h"\
 	"..\engine\cdll_int.h"\
@@ -961,15 +1019,15 @@ DEP_CPP_MOTD_=\
 !IF  "$(CFG)" == "cl_dll - Win32 Release"
 
 
-"$(INTDIR)\MOTD.obj" : $(SOURCE) $(DEP_CPP_MOTD_) "$(INTDIR)"
+"$(INTDIR)\vgui_MOTDWindow.obj" : $(SOURCE) $(DEP_CPP_MOTD_) "$(INTDIR)"
 
 
 !ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
 
 
-"$(INTDIR)\MOTD.obj" : $(SOURCE) $(DEP_CPP_MOTD_) "$(INTDIR)"
+"$(INTDIR)\vgui_MOTDWindow.obj" : $(SOURCE) $(DEP_CPP_MOTD_) "$(INTDIR)"
 
-"$(INTDIR)\MOTD.sbr" : $(SOURCE) $(DEP_CPP_MOTD_) "$(INTDIR)"
+"$(INTDIR)\vgui_MOTDWindow.sbr" : $(SOURCE) $(DEP_CPP_MOTD_) "$(INTDIR)"
 
 
 !ENDIF 
@@ -1235,6 +1293,602 @@ DEP_CPP_STATUS=\
 "$(INTDIR)\status_icons.obj" : $(SOURCE) $(DEP_CPP_STATUS) "$(INTDIR)"
 
 "$(INTDIR)\status_icons.sbr" : $(SOURCE) $(DEP_CPP_STATUS) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\com_weapons.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\com_weapons.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\com_weapons.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\com_weapons.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\demo.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\demo.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\demo.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\demo.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\entity.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\entity.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\entity.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\entity.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\ev_common.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\ev_common.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\ev_common.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\ev_common.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\ev_hldm.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\ev_hldm.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\ev_hldm.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\ev_hldm.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\events.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\events.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\events.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\events.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\hl\hl_baseentity.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\hl_baseentity.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\hl_baseentity.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\hl_baseentity.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\hl\hl_events.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\hl_events.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\hl_events.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\hl_events.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\hl\hl_objects.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\hl_objects.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\hl_objects.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\hl_objects.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\hl\hl_weapons.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\hl_weapons.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\hl_weapons.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\hl_weapons.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\hud_servers.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\hud_servers.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\hud_servers.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\hud_servers.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\in_camera.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\in_camera.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\in_camera.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\in_camera.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\input.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\input.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\input.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\input.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\inputw32.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\inputw32.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\inputw32.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\inputw32.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\tri.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\tri.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\tri.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\tri.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_ClassMenu.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_ClassMenu.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_ClassMenu.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_ClassMenu.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_ConsolePanel.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_ConsolePanel.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_ConsolePanel.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_ConsolePanel.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_ControlConfigPanel.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_ControlConfigPanel.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_ControlConfigPanel.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_ControlConfigPanel.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_CustomObjects.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_CustomObjects.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_CustomObjects.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_CustomObjects.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_int.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_int.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_int.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_int.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_SchemeManager.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_SchemeManager.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_SchemeManager.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_SchemeManager.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_ServerBrowser.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_ServerBrowser.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_ServerBrowser.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_ServerBrowser.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_TeamFortressViewport.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_TeamFortressViewport.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_TeamFortressViewport.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_TeamFortressViewport.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\vgui_teammenu.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\vgui_teammenu.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\vgui_teammenu.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\vgui_teammenu.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=.\view.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\view.obj" : $(SOURCE) "$(INTDIR)"
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\view.obj" : $(SOURCE) "$(INTDIR)"
+
+"$(INTDIR)\view.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=..\dlls\wpn_shared\hl_wpn_glock.cpp
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\hl_wpn_glock.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\hl_wpn_glock.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\hl_wpn_glock.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=..\pm_shared\pm_debug.c
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\pm_debug.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\pm_debug.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\pm_debug.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=..\pm_shared\pm_math.c
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\pm_math.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\pm_math.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\pm_math.sbr" : $(SOURCE) "$(INTDIR)"
+
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=..\pm_shared\pm_shared.c
+
+!IF  "$(CFG)" == "cl_dll - Win32 Release"
+
+"$(INTDIR)\pm_shared.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "cl_dll - Win32 Debug"
+
+"$(INTDIR)\pm_shared.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+"$(INTDIR)\pm_shared.sbr" : $(SOURCE) "$(INTDIR)"
 
 
 !ENDIF 
