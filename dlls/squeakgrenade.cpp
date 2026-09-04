@@ -133,7 +133,7 @@ void CSqueakGrenade :: Spawn( void )
 	pev->flags |= FL_MONSTER;
 	pev->takedamage		= DAMAGE_AIM;
 	pev->health			= gSkillData.snarkHealth;
-	pev->gravity		= 0.5;
+	pev->gravity		= CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_throwables" ) == 1 ? -0.5 : 0.5;
 	pev->friction		= 0.5;
 
 	pev->dmg = gSkillData.snarkDmgPop;
@@ -204,6 +204,8 @@ void CSqueakGrenade :: GibMonster( void )
 
 void CSqueakGrenade::HuntThink( void )
 {
+	BOOL upsideDown = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_throwables" ) == 1;
+
 	// ALERT( at_console, "think\n" );
 
 	if (!IsInWorld())
@@ -233,7 +235,7 @@ void CSqueakGrenade::HuntThink( void )
 			pev->movetype = MOVETYPE_FLY;
 		}
 		pev->velocity = pev->velocity * 0.9;
-		pev->velocity.z += 8.0;
+		pev->velocity.z += upsideDown ? -8.0 : 8.0;
 	}
 	else if (pev->movetype = MOVETYPE_FLY)
 	{

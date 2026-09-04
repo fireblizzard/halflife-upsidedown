@@ -3469,6 +3469,8 @@ CBaseEntity* CBaseMonster :: DropItem ( char *pszItemName, const Vector &vecPos,
 		// do we want this behavior to be default?! (sjb)
 		pItem->pev->velocity = pev->velocity;
 		pItem->pev->avelocity = Vector ( 0, RANDOM_FLOAT( 0, 100 ), 0 );
+		if ( CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_throwables" ) == 1 )
+			pItem->pev->gravity = pItem->pev->gravity ? -fabs( pItem->pev->gravity ) : -1;
 		return pItem;
 	}
 	else

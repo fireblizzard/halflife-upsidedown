@@ -82,7 +82,7 @@ void CSatchelCharge :: Spawn( void )
 	SetThink( SatchelThink );
 	pev->nextthink = gpGlobals->time + 0.1;
 
-	pev->gravity = 0.5;
+	pev->gravity = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_throwables" ) == 1 ? -0.5 : 0.5;
 	pev->friction = 0.8;
 
 	pev->dmg = gSkillData.plrDmgSatchel;
@@ -100,11 +100,12 @@ void CSatchelCharge::SatchelSlide( CBaseEntity *pOther )
 		return;
 
 	// pev->avelocity = Vector (300, 300, 300);
-	pev->gravity = 1;// normal gravity now
+	BOOL upsideDown = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_throwables" ) == 1;
+	pev->gravity = upsideDown ? -1 : 1;
 
 	// HACKHACK - On ground isn't always set, so look for ground underneath
 	TraceResult tr;
-	UTIL_TraceLine( pev->origin, pev->origin - Vector(0,0,10), ignore_monsters, edict(), &tr );
+	UTIL_TraceLine( pev->origin, pev->origin + Vector( 0, 0, upsideDown ? 10 : -10 ), ignore_monsters, edict(), &tr );
 
 	if ( tr.flFraction < 1.0 )
 	{
@@ -123,6 +124,8 @@ void CSatchelCharge::SatchelSlide( CBaseEntity *pOther )
 
 void CSatchelCharge :: SatchelThink( void )
 {
+	BOOL upsideDown = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_throwables" ) == 1;
+
 	StudioFrameAdvance( );
 	pev->nextthink = gpGlobals->time + 0.1;
 
@@ -137,7 +140,7 @@ void CSatchelCharge :: SatchelThink( void )
 		pev->movetype = MOVETYPE_FLY;
 		pev->velocity = pev->velocity * 0.8;
 		pev->avelocity = pev->avelocity * 0.9;
-		pev->velocity.z += 8;
+		pev->velocity.z += upsideDown ? -8 : 8;
 	}
 	else if (pev->waterlevel == 0)
 	{
@@ -145,7 +148,7 @@ void CSatchelCharge :: SatchelThink( void )
 	}
 	else
 	{
-		pev->velocity.z -= 8;
+		pev->velocity.z += upsideDown ? 8 : -8;
 	}	
 }
 

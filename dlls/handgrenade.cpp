@@ -147,6 +147,11 @@ void CHandGrenade::WeaponIdle( void )
 	if (m_flStartThrow)
 	{
 		Vector angThrow = m_pPlayer->pev->v_angle + m_pPlayer->pev->punchangle;
+		BOOL upsideDownThrow = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 &&
+			CVAR_GET_FLOAT( "ud_throwables" ) == 1;
+
+		if ( upsideDownThrow )
+			angThrow.x = -angThrow.x;
 
 		if (angThrow.x < 0)
 			angThrow.x = -10 + angThrow.x * ((90 - 10) / 90.0);
@@ -156,6 +161,9 @@ void CHandGrenade::WeaponIdle( void )
 		float flVel = (90 - angThrow.x) * 4;
 		if (flVel > 500)
 			flVel = 500;
+
+		if ( upsideDownThrow )
+			angThrow.x = -angThrow.x;
 
 		UTIL_MakeVectors( angThrow );
 
