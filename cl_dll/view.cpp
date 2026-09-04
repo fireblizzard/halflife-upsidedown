@@ -731,11 +731,21 @@ void V_CalcNormalRefdef ( struct ref_params_s *pparams )
 		view->origin[2] += 0.5;
 	}
 
-	// Add in the punchangle, if any
-	VectorAdd ( pparams->viewangles, pparams->punchangle, pparams->viewangles );
-
-	// Include client side punch, too
-	VectorAdd ( pparams->viewangles, (float *)&ev_punchangle, pparams->viewangles);
+	// Add in the punchangle, mirrored across pitch for the upside-down view
+	if ( upsidedown )
+	{
+		pparams->viewangles[PITCH] -= pparams->punchangle[PITCH];
+		pparams->viewangles[YAW] += pparams->punchangle[YAW];
+		pparams->viewangles[ROLL] += pparams->punchangle[ROLL];
+		pparams->viewangles[PITCH] -= ev_punchangle[PITCH];
+		pparams->viewangles[YAW] += ev_punchangle[YAW];
+		pparams->viewangles[ROLL] += ev_punchangle[ROLL];
+	}
+	else
+	{
+		VectorAdd ( pparams->viewangles, pparams->punchangle, pparams->viewangles );
+		VectorAdd ( pparams->viewangles, (float *)&ev_punchangle, pparams->viewangles );
+	}
 
 	V_DropPunchAngle ( pparams->frametime, (float *)&ev_punchangle );
 
