@@ -712,6 +712,14 @@ void CGib :: BounceGibTouch ( CBaseEntity *pOther )
 {
 	Vector	vecSpot;
 	TraceResult	tr;
+
+	if ( pev->gravity < 0 && UTIL_GetGlobalTrace().vecPlaneNormal.z < -0.7 )
+	{
+		pev->velocity = g_vecZero;
+		pev->avelocity = g_vecZero;
+		pev->movetype = MOVETYPE_NONE;
+		return;
+	}
 	
 	//if ( RANDOM_LONG(0,1) )
 	//	return;// don't bleed everytime
@@ -782,6 +790,7 @@ void CGib :: StickyGibTouch ( CBaseEntity *pOther )
 void CGib :: Spawn( const char *szGibModel )
 {
 	pev->movetype = MOVETYPE_BOUNCE;
+	pev->gravity = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 ? -1 : 1;
 	pev->friction = 0.55; // deading the bounce a bit
 	
 	// sometimes an entity inherits the edict from a former piece of glass,

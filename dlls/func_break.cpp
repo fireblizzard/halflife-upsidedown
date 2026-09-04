@@ -24,6 +24,7 @@
 #include "cbase.h"
 #include "saverestore.h"
 #include "func_break.h"
+#include "monsters.h"
 #include "decals.h"
 #include "explode.h"
 #include "killcounter.h"
@@ -335,71 +336,79 @@ void CBreakable::MaterialSoundRandom( edict_t *pEdict, Materials soundMaterial, 
 
 void CBreakable::Precache( void )
 {
-	const char *pGibName;
+	const char *pGibName = GibModel();
 
-    switch (m_Material) 
+	switch (m_Material)
 	{
 	case matWood:
-		pGibName = "models/woodgibs.mdl";
-		
 		PRECACHE_SOUND("debris/bustcrate1.wav");
 		PRECACHE_SOUND("debris/bustcrate2.wav");
 		break;
 	case matFlesh:
-		pGibName = "models/fleshgibs.mdl";
-		
 		PRECACHE_SOUND("debris/bustflesh1.wav");
 		PRECACHE_SOUND("debris/bustflesh2.wav");
 		break;
 	case matComputer:
 		PRECACHE_SOUND("buttons/spark5.wav");
 		PRECACHE_SOUND("buttons/spark6.wav");
-		pGibName = "models/computergibs.mdl";
-		
 		PRECACHE_SOUND("debris/bustmetal1.wav");
 		PRECACHE_SOUND("debris/bustmetal2.wav");
 		break;
-
 	case matUnbreakableGlass:
 	case matGlass:
-		pGibName = "models/glassgibs.mdl";
-		
 		PRECACHE_SOUND("debris/bustglass1.wav");
 		PRECACHE_SOUND("debris/bustglass2.wav");
 		break;
 	case matMetal:
-		pGibName = "models/metalplategibs.mdl";
-		
 		PRECACHE_SOUND("debris/bustmetal1.wav");
 		PRECACHE_SOUND("debris/bustmetal2.wav");
 		break;
 	case matCinderBlock:
-		pGibName = "models/cindergibs.mdl";
-		
-		PRECACHE_SOUND("debris/bustconcrete1.wav");
-		PRECACHE_SOUND("debris/bustconcrete2.wav");
-		break;
 	case matRocks:
-		pGibName = "models/rockgibs.mdl";
-		
 		PRECACHE_SOUND("debris/bustconcrete1.wav");
 		PRECACHE_SOUND("debris/bustconcrete2.wav");
 		break;
 	case matCeilingTile:
-		pGibName = "models/ceilinggibs.mdl";
-		
-		PRECACHE_SOUND ("debris/bustceiling.wav");  
+		PRECACHE_SOUND("debris/bustceiling.wav");
 		break;
 	}
-	MaterialSoundPrecache( m_Material );
-	if ( m_iszGibModel )
-		pGibName = STRING(m_iszGibModel);
 
+	MaterialSoundPrecache( m_Material );
 	m_idShard = PRECACHE_MODEL( (char *)pGibName );
 
 	// Precache the spawn item's data
 	if ( m_iszSpawnObject )
 		UTIL_PrecacheOther( (char *)STRING( m_iszSpawnObject ) );
+}
+
+const char *CBreakable::GibModel( void )
+{
+	if ( m_iszGibModel )
+		return STRING(m_iszGibModel);
+
+    switch (m_Material)
+	{
+	case matWood:
+		return "models/woodgibs.mdl";
+	case matFlesh:
+		return "models/fleshgibs.mdl";
+	case matComputer:
+		return "models/computergibs.mdl";
+
+	case matUnbreakableGlass:
+	case matGlass:
+		return "models/glassgibs.mdl";
+	case matMetal:
+		return "models/metalplategibs.mdl";
+	case matCinderBlock:
+		return "models/cindergibs.mdl";
+	case matRocks:
+		return "models/rockgibs.mdl";
+	case matCeilingTile:
+		return "models/ceilinggibs.mdl";
+	default:
+		return "models/woodgibs.mdl";
+	}
 }
 
 // play shard sound when func_breakable takes damage.
@@ -731,6 +740,28 @@ void CBreakable::Die( void )
 	}
 
 	vecSpot = pev->origin + (pev->mins + pev->maxs) * 0.5;
+	pev->solid = SOLID_NOT;
+	if ( CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 )
+	{
+		int bodyCount = MODEL_FRAMES( m_idShard );
+		for ( int i = 0; i < NUM_SHARDS; i++ )
+		{
+			CGib *pGib = GetClassPtr( (CGib *)NULL );
+			pGib->Spawn( GibModel() );
+			pGib->pev->body = bodyCount > 1 ? RANDOM_LONG( 0, bodyCount - 1 ) : 0;
+			pGib->pev->origin.x = RANDOM_FLOAT( pev->absmin.x, pev->absmax.x );
+			pGib->pev->origin.y = RANDOM_FLOAT( pev->absmin.y, pev->absmax.y );
+			pGib->pev->origin.z = RANDOM_FLOAT( pev->absmin.z, pev->absmax.z );
+			pGib->pev->velocity = vecVelocity + Vector( RANDOM_FLOAT( -100, 100 ), RANDOM_FLOAT( -100, 100 ), RANDOM_FLOAT( -100, 100 ) );
+			pGib->pev->avelocity = Vector( RANDOM_FLOAT( 100, 300 ), RANDOM_FLOAT( 100, 300 ), RANDOM_FLOAT( 100, 300 ) );
+			pGib->m_bloodColor = DONT_BLEED;
+			pGib->m_material = m_Material;
+			pGib->m_lifeTime = 2.5;
+			pGib->pev->nextthink = gpGlobals->time + 0.5;
+		}
+	}
+	else
+	{
 	MESSAGE_BEGIN( MSG_PVS, SVC_TEMPENTITY, vecSpot );
 		WRITE_BYTE( TE_BREAKMODEL);
 
@@ -764,6 +795,7 @@ void CBreakable::Die( void )
 		// flags
 		WRITE_BYTE( cFlag );
 	MESSAGE_END();
+	}
 
 	float size = pev->size.x;
 	if ( size < pev->size.y )
@@ -793,7 +825,6 @@ void CBreakable::Die( void )
 	// Don't fire something that could fire myself
 	pev->targetname = 0;
 
-	pev->solid = SOLID_NOT;
 	// Fire targets on break
 	SUB_UseTargets( NULL, USE_TOGGLE, 0 );
 

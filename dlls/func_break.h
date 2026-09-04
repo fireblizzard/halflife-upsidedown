@@ -38,6 +38,7 @@ public:
 
 	BOOL IsBreakable( void );
 	BOOL SparkWhenHit( void );
+	const char *GibModel( void );
 
 	int	 DamageDecal( int bitsDamageType );
 
