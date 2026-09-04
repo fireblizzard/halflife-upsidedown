@@ -243,7 +243,6 @@ void CHudMessage::MessageDrawScan( client_textmessage_t *pMessage, float time )
 {
 	int i, j, length, width;
 	const char *pText;
-	unsigned char line[80];
 
 	pText = pMessage->pMessage;
 	// Count lines
@@ -263,7 +262,7 @@ void CHudMessage::MessageDrawScan( client_textmessage_t *pMessage, float time )
 			width = 0;
 		}
 		else
-			width += gHUD.m_scrinfo.charWidths[*pText];
+			width += gHUD.m_scrinfo.charWidths[(unsigned char)*pText];
 		pText++;
 		length++;
 	}
@@ -280,24 +279,24 @@ void CHudMessage::MessageDrawScan( client_textmessage_t *pMessage, float time )
 
 	for ( i = 0; i < m_parms.lines; i++ )
 	{
+		const char *pLine = pText;
 		m_parms.lineLength = 0;
 		m_parms.width = 0;
 		while ( *pText && *pText != '\n' )
 		{
-			unsigned char c = *pText;
-			line[m_parms.lineLength] = c;
+			unsigned char c = (unsigned char)*pText;
 			m_parms.width += gHUD.m_scrinfo.charWidths[c];
 			m_parms.lineLength++;
 			pText++;
 		}
-		pText++;		// Skip LF
-		line[m_parms.lineLength] = 0;
+		if ( *pText == '\n' )
+			pText++;		// Skip LF
 
 		m_parms.x = XPosition( pMessage->x, m_parms.width, m_parms.totalWidth );
 
 		for ( j = 0; j < m_parms.lineLength; j++ )
 		{
-			m_parms.text = line[j];
+			m_parms.text = (unsigned char)pLine[j];
 			int next = m_parms.x + gHUD.m_scrinfo.charWidths[ m_parms.text ];
 			MessageScanNextChar();
 			
