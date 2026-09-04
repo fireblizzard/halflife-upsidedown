@@ -1,5 +1,16 @@
-# Half-Life Kill Counter mod
-Kill Counter mod for Half-Life 1. Based on SDK 2.1 for bxt compatibility.
+# Half-Life Upside Down mod
+Upside Down mod for Half-Life 1 based on the Kill Counter mod. Not tested on Linux yet
+
+Adds a bunch of cvars:
+- **ud_upsidedown** <0/1> - Default: 1 (**enabled**) - Changes physics so that the ceiling is the new floor for the player
+- **ud_pushables** <0/1> - Default: 1 (**enabled**) - Applies the upside down physics to pushable objects as well, like most boxes and barrels, so that you can use them to object boost or simply climb
+- **ud_throwables** <0/1> - Default: 1 (**enabled**) - Applies the upside down physics to grenades, satchels and snarks, so that they don't gravitate towards the floor (your ceiling)
+- **ud_headcrabs** <0/1> - Default: 1 (**enabled**) - Makes headcrabs gravitate towards the ceiling (your floor) so that you can maybe use them to climb out of a room by jumping on them, and makes them give you a vertical boost when you're jumping so that again you can keep advancing (vent to server room in UC)
+- **ud_autojump** <0/1> - Default: 0 (**disabled**) - The official BunnymodXT's autojump is not available as it fails to detect a bunch of things in this mod, so I built it into the mod
+- **ud_gauss_multiplayer** <0/1> - Default: 0 (**disabled**) - On singleplayer it allows you to fly upwards and reload the gauss weapon faster like in multiplayer
+
+This mod also changes maps to make them passable, for now:
+- **c1a0c** - Test chamber in UC, post-disaster - Changes one of the big pillars so that you slowly slide up (works at 250fps), and a couple of beams so that you can use them to make the jump to the little window in the room where multiple rays hit and break the door open. Still not an easy map to run upside down
 
 ## Building in VS Code
 
