@@ -33,6 +33,7 @@ bld/
 [Ll]ogs/
 dlls/Releasehl/
 dlls/Profilehl/
+dlls/[Dd]ebughl/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
