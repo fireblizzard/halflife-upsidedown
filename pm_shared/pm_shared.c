@@ -2202,6 +2202,15 @@ void PM_LadderMove( physent_t *pLadder )
 				VectorScale( v_right, right, rightVelocity );
 				if ( PM_IsUpsideDown() )
 				{
+					// This allows for going up the ladder fast when only looking slightly up,
+					// and pretty slow downwards when looking slightly down. Just like the regular
+					// game but when upside down. Without this it'd go really slow when only
+					// looking slightly upwards, which feels bad
+					normal = DotProduct( velocity, trace.plane.normal );
+					VectorScale( trace.plane.normal, normal, cross );
+					VectorSubtract( velocity, cross, lateral );
+					VectorSubtract( lateral, cross, velocity );
+
 					// In the regular game holding 2 directions (e.g. forward and right while looking up)
 					// makes you climb faster, so here we imitate the same behaviour but accounting for being upside down
 					normal = DotProduct( rightVelocity, trace.plane.normal );
