@@ -106,15 +106,21 @@ void CSatchelCharge::SatchelSlide( CBaseEntity *pOther )
 	// HACKHACK - On ground isn't always set, so look for ground underneath
 	TraceResult tr;
 	UTIL_TraceLine( pev->origin, pev->origin + Vector( 0, 0, upsideDown ? 10 : -10 ), ignore_monsters, edict(), &tr );
+	BOOL supported = tr.flFraction < 1.0;
 
-	if ( tr.flFraction < 1.0 )
+	if ( supported )
 	{
 		// add a bit of static friction
 		pev->velocity = pev->velocity * 0.95;
 		pev->avelocity = pev->avelocity * 0.9;
+		if ( upsideDown )
+		{
+			pev->velocity.z = 0;
+			pev->gravity = 0;
+		}
 		// play sliding sound, volume based on velocity
 	}
-	if ( !(pev->flags & FL_ONGROUND) && pev->velocity.Length2D() > 10 )
+	if ( !supported && !(pev->flags & FL_ONGROUND) && pev->velocity.Length2D() > 10 )
 	{
 		BounceSound();
 	}
@@ -125,9 +131,12 @@ void CSatchelCharge::SatchelSlide( CBaseEntity *pOther )
 void CSatchelCharge :: SatchelThink( void )
 {
 	BOOL upsideDown = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_throwables" ) == 1;
+	TraceResult tr;
 
 	StudioFrameAdvance( );
 	pev->nextthink = gpGlobals->time + 0.1;
+	UTIL_TraceLine( pev->origin, pev->origin + Vector( 0, 0, upsideDown ? 2 : -2 ), ignore_monsters, edict(), &tr );
+	pev->gravity = upsideDown && tr.flFraction < 1.0 ? 0 : ( upsideDown ? -0.5 : 0.5 );
 
 	if (!IsInWorld())
 	{

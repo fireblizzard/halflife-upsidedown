@@ -36,13 +36,27 @@ LINK_ENTITY_TO_CLASS( grenade, CGrenade );
 // Grenades flagged with this will be triggered when the owner calls detonateSatchelCharges
 #define SF_DETONATE		0x0001
 
+static BOOL IsUpsideDownThrowable( void )
+{
+	return CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_throwables" ) == 1;
+}
+
+static BOOL IsSupportedByCeiling( entvars_t *pev )
+{
+	TraceResult tr;
+	UTIL_TraceLine( pev->origin, pev->origin + Vector( 0, 0, 10 ), ignore_monsters, ENT(pev), &tr );
+	return tr.flFraction < 1.0;
+}
+
 //
 // Grenade Explode
 //
 void CGrenade::Explode( Vector vecSrc, Vector vecAim )
 {
 	TraceResult tr;
-	UTIL_TraceLine ( pev->origin, pev->origin + Vector ( 0, 0, -32 ),  ignore_monsters, ENT(pev), & tr);
+	UTIL_TraceLine( pev->origin,
+		pev->origin + Vector( 0, 0, IsUpsideDownThrowable() ? 32 : -32 ),
+		ignore_monsters, ENT(pev), &tr );
 
 	Explode( &tr, DMG_BLAST );
 }
@@ -173,9 +187,10 @@ void CGrenade::Detonate( void )
 {
 	TraceResult tr;
 	Vector		vecSpot;// trace starts here!
+	BOOL upsideDown = IsUpsideDownThrowable();
 
-	vecSpot = pev->origin + Vector ( 0 , 0 , 8 );
-	UTIL_TraceLine ( vecSpot, vecSpot + Vector ( 0, 0, -40 ),  ignore_monsters, ENT(pev), & tr);
+	vecSpot = pev->origin + Vector( 0, 0, upsideDown ? -8 : 8 );
+	UTIL_TraceLine( vecSpot, vecSpot + Vector( 0, 0, upsideDown ? 40 : -40 ), ignore_monsters, ENT(pev), &tr );
 
 	Explode( &tr, DMG_BLAST );
 }
@@ -218,6 +233,11 @@ void CGrenade::DangerSoundThink( void )
 
 void CGrenade::BounceTouch( CBaseEntity *pOther )
 {
+	TraceResult impactTrace = UTIL_GetGlobalTrace();
+	BOOL upsideDown = IsUpsideDownThrowable();
+	BOOL supportedByCeiling = upsideDown &&
+		( impactTrace.vecPlaneNormal.z < -0.7 || IsSupportedByCeiling( pev ) );
+
 	// don't hit the guy that launched this grenade
 	if ( pOther->edict() == pev->owner )
 		return;
@@ -228,9 +248,8 @@ void CGrenade::BounceTouch( CBaseEntity *pOther )
 		entvars_t *pevOwner = VARS( pev->owner );
 		if (pevOwner)
 		{
-			TraceResult tr = UTIL_GetGlobalTrace( );
 			ClearMultiDamage( );
-			pOther->TraceAttack(pevOwner, 1, gpGlobals->v_forward, &tr, DMG_CLUB ); 
+			pOther->TraceAttack(pevOwner, 1, gpGlobals->v_forward, &impactTrace, DMG_CLUB );
 			ApplyMultiDamage( pev, pevOwner);
 		}
 		m_flNextAttack = gpGlobals->time + 1.0; // debounce
@@ -257,10 +276,18 @@ void CGrenade::BounceTouch( CBaseEntity *pOther )
 		m_fRegisteredSound = TRUE;
 	}
 
-	if (pev->flags & FL_ONGROUND)
+	if ( ( pev->flags & FL_ONGROUND ) || supportedByCeiling )
 	{
 		// add a bit of static friction
 		pev->velocity = pev->velocity * 0.8;
+		if ( supportedByCeiling )
+		{
+			if ( pev->movetype != MOVETYPE_FLY )
+				BounceSound();
+			pev->velocity.z = 0;
+			pev->gravity = 0;
+			pev->movetype = MOVETYPE_FLY;
+		}
 
 		pev->sequence = RANDOM_LONG( 1, 1 );
 	}
@@ -323,6 +350,29 @@ void CGrenade :: TumbleThink( void )
 
 	StudioFrameAdvance( );
 	pev->nextthink = gpGlobals->time + 0.1;
+
+	if ( IsUpsideDownThrowable() )
+	{
+		if ( IsSupportedByCeiling( pev ) )
+		{
+			pev->gravity = 0;
+			pev->movetype = MOVETYPE_FLY;
+			pev->velocity.x *= 0.8;
+			pev->velocity.y *= 0.8;
+			pev->velocity.z = 0;
+			pev->avelocity = pev->avelocity * 0.8;
+			if ( pev->velocity.Length2D() < 10 )
+			{
+				pev->velocity.x = 0;
+				pev->velocity.y = 0;
+			}
+		}
+		else
+		{
+			pev->gravity = -0.5;
+			pev->movetype = MOVETYPE_BOUNCE;
+		}
+	}
 
 	if (pev->dmgtime - 1 < gpGlobals->time)
 	{
