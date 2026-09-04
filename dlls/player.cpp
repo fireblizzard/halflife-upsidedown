@@ -1584,7 +1584,7 @@ void CBasePlayer::Jump()
 	// jump velocity is sqrt( height * gravity * 2)
 
 	// If this isn't the first frame pressing the jump button, break out.
-	if ( !FBitSet( m_afButtonPressed, IN_JUMP ) )
+	if ( !FBitSet( m_afButtonPressed, IN_JUMP ) && CVAR_GET_FLOAT( "ud_autojump" ) != 1 )
 		return;         // don't pogo stick
 
 	if ( !(pev->flags & FL_ONGROUND) || !pev->groundentity )
@@ -2060,6 +2060,7 @@ void CBasePlayer::PreThink(void)
 	// UNDONE: Do we need auto-repeat?
 	m_afButtonPressed =  buttonsChanged & pev->button;		// The changed ones still down are "pressed"
 	m_afButtonReleased = buttonsChanged & (~pev->button);	// The ones not down are "released"
+	g_engfuncs.pfnSetPhysicsKeyValue( edict(), "autojump", CVAR_GET_FLOAT( "ud_autojump" ) == 1 ? "1" : "0" );
 	g_engfuncs.pfnSetPhysicsKeyValue( edict(), "upsidedown", upsideDown ? "1" : "0" );
 	if ( pev->deadflag == DEAD_NO &&
 		 ( ( upsideDown && pev->view_ofs.z > 0 ) || ( !upsideDown && pev->view_ofs.z < 0 ) ) )
