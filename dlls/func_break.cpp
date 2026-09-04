@@ -943,6 +943,18 @@ void CPushable::GravityThink( void )
 		ClearBits( pev->flags, FL_ONGROUND );
 		pev->groundentity = NULL;
 	}
+	if ( upsideDown )
+	{
+		// Apply friction, otherwise it'll slide forever until hitting a wall or something
+		pev->velocity.x *= 0.8;
+		pev->velocity.y *= 0.8;
+		
+		if ( pev->velocity.Length2D() < 10 )
+		{
+			pev->velocity.x = 0;
+			pev->velocity.y = 0;
+		}
+	}
 	pev->gravity = upsideDown ? -gravity : gravity;
 	pev->nextthink = gpGlobals->time + 0.1;
 }
