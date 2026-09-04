@@ -11,6 +11,7 @@ Adds a bunch of cvars:
 
 This mod also changes maps to make them passable, for now:
 - **c1a0c** - Test chamber in UC, post-disaster - Changes one of the big pillars so that you slowly slide up (works at 250fps), and a couple of beams so that you can use them to make the jump to the little window in the room where multiple rays hit and break the door open. Still not an easy map to run upside down
+- **c1a4** - First map of BP - Adds 1 second to the time it takes for the elevator to start moving after pressing the button, so that you can quickly damageboost upwards and get on top of it
 
 ## Building in VS Code
 
