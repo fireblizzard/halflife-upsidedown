@@ -24,10 +24,16 @@
 #include "soundent.h"
 #include "shake.h"
 #include "gamerules.h"
+#include "game.h"
 
 
 #define	GAUSS_PRIMARY_CHARGE_VOLUME	256// how loud gauss is while charging
 #define GAUSS_PRIMARY_FIRE_VOLUME	450// how loud gauss is when discharged
+
+static BOOL UsesMultiplayerGaussRules( void )
+{
+	return g_pGameRules->IsMultiplayer() || ud_gauss_multiplayer.value != 0;
+}
 
 enum gauss_e {
 	GAUSS_IDLE = 0,
@@ -98,7 +104,7 @@ IMPLEMENT_SAVERESTORE( CGauss, CBasePlayerWeapon );
 
 float CGauss::GetFullChargeTime( void )
 {
-	if ( g_pGameRules->IsMultiplayer() )
+	if ( UsesMultiplayerGaussRules() )
 	{
 		return 1.5;
 	}
@@ -284,7 +290,7 @@ void CGauss::SecondaryAttack()
 		// during the charging process, eat one bit of ammo every once in a while
 		if ( gpGlobals->time > m_flNextAmmoBurn && m_flNextAmmoBurn != -1 )
 		{
-			if ( g_pGameRules->IsMultiplayer() )
+			if ( UsesMultiplayerGaussRules() )
 			{
 				m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]--;
 				m_flNextAmmoBurn = gpGlobals->time + 0.1;
@@ -378,7 +384,7 @@ void CGauss::StartFire( void )
 			m_pPlayer->pev->velocity = m_pPlayer->pev->velocity - gpGlobals->v_forward * flDamage * 5;
 		}
 
-		if ( !g_pGameRules->IsDeathmatch() )
+		if ( !UsesMultiplayerGaussRules() )
 		{
 			// in deathmatch, gauss can pop you up into the air. Not in single play.
 			m_pPlayer->pev->velocity.z = flZVel;
@@ -507,7 +513,7 @@ void CGauss::Fire( Vector vecOrigSrc, Vector vecDir, float flDamage )
 							//m_pPlayer->RadiusDamage( beam_tr.vecEndPos + vecDir * 8, pev, m_pPlayer->pev, flDamage, CLASS_NONE, DMG_BLAST );
 							float damage_radius;
 							
-							if ( g_pGameRules->IsMultiplayer() )
+							if ( UsesMultiplayerGaussRules() )
 							{
 								damage_radius = flDamage * 1.75;  // Old code == 2.5
 							}

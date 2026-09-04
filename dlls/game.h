@@ -37,6 +37,7 @@ extern cvar_t	decalfrequency;
 extern cvar_t	teamlist;
 extern cvar_t	teamoverride;
 extern cvar_t	defaultteam;
+extern cvar_t	ud_gauss_multiplayer;
 extern cvar_t	ud_upsidedown;
 extern cvar_t	ud_pushables;
 extern cvar_t	ud_throwables;
