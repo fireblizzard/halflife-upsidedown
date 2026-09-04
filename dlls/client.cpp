@@ -816,6 +816,12 @@ void SetupVisibility( edict_t *pViewEntity, edict_t *pClient, unsigned char **pv
 	{
 		org = org + ( VEC_HULL_MIN - VEC_DUCK_HULL_MIN );
 	}
+	if ( pView == pClient && CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 )
+	{
+		// Without this, entities will stop rendering when too close to the floor,
+		// or ceiling from the upside-down perspective
+		org.z += 6;
+	}
 
 	*pvs = ENGINE_SET_PVS ( (float *)&org );
 	*pas = ENGINE_SET_PAS ( (float *)&org );
