@@ -465,6 +465,7 @@ void V_CalcNormalRefdef ( struct ref_params_s *pparams )
 {
 	cl_entity_t		*ent, *view;
 	int				i;
+	int				upsidedown;
 	vec3_t			angles;
 	float			bob, waterOffset;
 	static viewinterp_t		ViewInterp;
@@ -571,6 +572,9 @@ void V_CalcNormalRefdef ( struct ref_params_s *pparams )
 	}
 
 	VectorCopy ( pparams->cl_viewangles, pparams->viewangles );
+	upsidedown = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && !iIsSpectator && !CL_IsThirdPerson();
+	if ( upsidedown )
+		pparams->viewangles[ROLL] += 180.0f;
 
 	gEngfuncs.V_CalcShake();
 	gEngfuncs.V_ApplyShake( pparams->vieworg, pparams->viewangles, 1.0 );
@@ -649,7 +653,7 @@ void V_CalcNormalRefdef ( struct ref_params_s *pparams )
 	V_AddIdle ( pparams );
 
 	// offsets
-	VectorCopy( pparams->cl_viewangles, angles );
+	VectorCopy( upsidedown ? pparams->viewangles : pparams->cl_viewangles, angles );
 
 	AngleVectors ( angles, pparams->forward, pparams->right, pparams->up );
 
@@ -679,7 +683,7 @@ void V_CalcNormalRefdef ( struct ref_params_s *pparams )
 	}
 	
 	// Give gun our viewangles
-	VectorCopy ( pparams->cl_viewangles, view->angles );
+	VectorCopy ( upsidedown ? pparams->viewangles : pparams->cl_viewangles, view->angles );
 	
 	// set up gun position
 	V_CalcGunAngle ( pparams );

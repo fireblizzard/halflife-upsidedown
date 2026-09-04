@@ -31,6 +31,7 @@ extern "C"
 extern cl_enginefunc_t gEngfuncs;
 
 extern int iMouseInUse;
+extern int CL_IsUpsideDown( void );
 
 extern kbutton_t	in_strafe;
 extern kbutton_t	in_mlook;
@@ -343,11 +344,11 @@ void IN_MouseMove ( float frametime, usercmd_t *cmd)
 		if ( (in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1) ))
 			cmd->sidemove += m_side->value * mouse_x;
 		else
-			viewangles[YAW] -= m_yaw->value * mouse_x;
+			viewangles[YAW] -= (CL_IsUpsideDown() ? -1.0f : 1.0f) * m_yaw->value * mouse_x;
 
 		if ( (in_mlook.state & 1) && !(in_strafe.state & 1))
 		{
-			viewangles[PITCH] += m_pitch->value * mouse_y;
+			viewangles[PITCH] += (CL_IsUpsideDown() ? -1.0f : 1.0f) * m_pitch->value * mouse_y;
 			if (viewangles[PITCH] > cl_pitchdown->value)
 				viewangles[PITCH] = cl_pitchdown->value;
 			if (viewangles[PITCH] < -cl_pitchup->value)

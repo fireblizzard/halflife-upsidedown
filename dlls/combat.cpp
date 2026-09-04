@@ -867,7 +867,8 @@ int CBaseMonster :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker,
 		CBaseEntity *pInflictor = CBaseEntity :: Instance( pevInflictor );
 		if (pInflictor)
 		{
-			vecDir = ( pInflictor->Center() - Vector ( 0, 0, 10 ) - Center() ).Normalize();
+			float verticalOffset = IsPlayer() && CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 ? -10 : 10;
+			vecDir = ( pInflictor->Center() - Vector ( 0, 0, verticalOffset ) - Center() ).Normalize();
 			vecDir = g_vecAttackDir = vecDir.Normalize();
 		}
 	}

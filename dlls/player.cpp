@@ -2054,11 +2054,16 @@ void CBasePlayer :: UpdateStepSound( void )
 void CBasePlayer::PreThink(void)
 {
 	int buttonsChanged = (m_afButtonLast ^ pev->button);	// These buttons have changed this frame
+	BOOL upsideDown = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1;
 	
 	// Debounced button codes for pressed/released
 	// UNDONE: Do we need auto-repeat?
 	m_afButtonPressed =  buttonsChanged & pev->button;		// The changed ones still down are "pressed"
 	m_afButtonReleased = buttonsChanged & (~pev->button);	// The ones not down are "released"
+	g_engfuncs.pfnSetPhysicsKeyValue( edict(), "upsidedown", upsideDown ? "1" : "0" );
+	if ( pev->deadflag == DEAD_NO &&
+		 ( ( upsideDown && pev->view_ofs.z > 0 ) || ( !upsideDown && pev->view_ofs.z < 0 ) ) )
+		pev->view_ofs.z = -pev->view_ofs.z;
 
 	g_pGameRules->PlayerThink( this );
 
@@ -2169,7 +2174,7 @@ void CBasePlayer::PreThink(void)
 
 	if ( !FBitSet ( pev->flags, FL_ONGROUND ) )
 	{
-		m_flFallVelocity = -pev->velocity.z;
+		m_flFallVelocity = upsideDown ? pev->velocity.z : -pev->velocity.z;
 	}
 
 	// StudioFrameAdvance( );//!!!HACKHACK!!! Can't be hit by traceline when not animating?
@@ -3127,7 +3132,7 @@ void CBasePlayer::Spawn( void )
 	else
 		UTIL_SetSize(pev, VEC_HULL_MIN, VEC_HULL_MAX);
 
-    pev->view_ofs = VEC_VIEW;
+	pev->view_ofs = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 ? -VEC_VIEW : VEC_VIEW;
 	Precache();
 	m_HackedGunPos		= Vector( 0, 32, 0 );
 

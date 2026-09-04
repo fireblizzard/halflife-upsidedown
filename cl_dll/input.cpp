@@ -27,6 +27,8 @@ extern int g_iAlive;
 
 extern "C" 
 {
+	extern int iIsSpectator;
+	int CL_IsThirdPerson( void );
 	struct kbutton_s DLLEXPORT *KB_Find( const char *name );
 	void DLLEXPORT CL_CreateMove ( float frametime, struct usercmd_s *cmd, int active );
 	void DLLEXPORT HUD_Shutdown( void );
@@ -45,6 +47,11 @@ void IN_Shutdown( void );
 void V_Init( void );
 void VectorAngles( const float *forward, float *angles );
 int CL_ButtonBits( int );
+
+int CL_IsUpsideDown( void )
+{
+	return CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && !iIsSpectator && !CL_IsThirdPerson();
+}
 
 // xxx need client dll function to get and clear impuse
 extern cvar_t *in_joystick;
@@ -547,6 +554,7 @@ void CL_AdjustAngles ( float frametime, float *viewangles )
 {
 	float	speed;
 	float	up, down;
+	float	direction = CL_IsUpsideDown() ? -1.0f : 1.0f;
 	
 	if (in_speed.state & 1)
 	{
@@ -559,22 +567,22 @@ void CL_AdjustAngles ( float frametime, float *viewangles )
 
 	if (!(in_strafe.state & 1))
 	{
-		viewangles[YAW] -= speed*cl_yawspeed->value*CL_KeyState (&in_right);
-		viewangles[YAW] += speed*cl_yawspeed->value*CL_KeyState (&in_left);
+		viewangles[YAW] -= direction*speed*cl_yawspeed->value*CL_KeyState (&in_right);
+		viewangles[YAW] += direction*speed*cl_yawspeed->value*CL_KeyState (&in_left);
 		viewangles[YAW] = anglemod(viewangles[YAW]);
 	}
 	if (in_klook.state & 1)
 	{
 		V_StopPitchDrift ();
-		viewangles[PITCH] -= speed*cl_pitchspeed->value * CL_KeyState (&in_forward);
-		viewangles[PITCH] += speed*cl_pitchspeed->value * CL_KeyState (&in_back);
+		viewangles[PITCH] -= direction*speed*cl_pitchspeed->value * CL_KeyState (&in_forward);
+		viewangles[PITCH] += direction*speed*cl_pitchspeed->value * CL_KeyState (&in_back);
 	}
 	
 	up = CL_KeyState (&in_lookup);
 	down = CL_KeyState(&in_lookdown);
 	
-	viewangles[PITCH] -= speed*cl_pitchspeed->value * up;
-	viewangles[PITCH] += speed*cl_pitchspeed->value * down;
+	viewangles[PITCH] -= direction*speed*cl_pitchspeed->value * up;
+	viewangles[PITCH] += direction*speed*cl_pitchspeed->value * down;
 
 	if (up || down)
 		V_StopPitchDrift ();
@@ -661,6 +669,9 @@ void DLLEXPORT CL_CreateMove ( float frametime, struct usercmd_s *cmd, int activ
 
 		// Allow mice and other controllers to add their inputs
 		IN_Move ( frametime, cmd );
+
+		if ( CL_IsUpsideDown() )
+			cmd->sidemove = -cmd->sidemove;
 	}
 
 	cmd->impulse = in_impulse;

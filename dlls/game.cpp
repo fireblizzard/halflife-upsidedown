@@ -42,6 +42,7 @@ cvar_t	teamlist = {"mp_teamlist","hgrunt;scientist", FCVAR_SERVER };
 cvar_t	teamoverride = {"mp_teamoverride","1" };
 cvar_t	defaultteam = {"mp_defaultteam","0" };
 cvar_t	allowmonsters={"mp_allowmonsters","0", FCVAR_SERVER };
+cvar_t	ud_upsidedown={"ud_upsidedown","1", FCVAR_SERVER };
 
 cvar_t	debugpath = {"kc_debug_monster_path_search", "0", FCVAR_SERVER };
 cvar_t	debugnihiattack = {"kc_debug_nihilanth_attacks", "0", FCVAR_SERVER };
@@ -484,6 +485,7 @@ void GameDLLInit( void )
 	CVAR_REGISTER (&teamoverride);
 	CVAR_REGISTER (&defaultteam);
 	CVAR_REGISTER (&allowmonsters);
+	CVAR_REGISTER (&ud_upsidedown);
 
 	CVAR_REGISTER (&debugpath);
 	CVAR_REGISTER (&debugnihiattack);

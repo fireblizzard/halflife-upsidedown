@@ -486,9 +486,18 @@ void CBasePlayerItem :: FallInit( void )
 //=========================================================
 void CBasePlayerItem::FallThink ( void )
 {
+	BOOL landed = FBitSet( pev->flags, FL_ONGROUND );
+
 	pev->nextthink = gpGlobals->time + 0.1;
 
-	if ( pev->flags & FL_ONGROUND )
+	if ( pev->gravity < 0 )
+	{
+		TraceResult tr;
+		UTIL_TraceLine( pev->origin, pev->origin + Vector( 0, 0, 2 ), ignore_monsters, edict(), &tr );
+		landed = tr.flFraction < 1.0;
+	}
+
+	if ( landed )
 	{
 		// clatter if we have an owner (i.e., dropped by someone)
 		// don't clatter if the gun is waiting to respawn (if it's waiting, it is invisible!)

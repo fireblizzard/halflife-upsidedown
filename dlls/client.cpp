@@ -917,6 +917,8 @@ int AddToFullPack( struct entity_state_s *state, int e, edict_t *ent, edict_t *h
 
 	memcpy( state->origin, ent->v.origin, 3 * sizeof( float ) );
 	memcpy( state->angles, ent->v.angles, 3 * sizeof( float ) );
+	if ( player && CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 )
+		state->angles.z += 180.0f;
 	memcpy( state->mins, ent->v.mins, 3 * sizeof( float ) );
 	memcpy( state->maxs, ent->v.maxs, 3 * sizeof( float ) );
 
@@ -1404,6 +1406,9 @@ void UpdateClientData ( const struct edict_s *ent, int sendweapons, struct clien
 	cd->origin			= ent->v.origin;
 	cd->velocity		= ent->v.velocity;
 	cd->view_ofs		= ent->v.view_ofs;
+	if ( ( CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && cd->view_ofs.z > 0 ) ||
+		 ( CVAR_GET_FLOAT( "ud_upsidedown" ) != 1 && cd->view_ofs.z < 0 ) )
+		cd->view_ofs.z = -cd->view_ofs.z;
 	cd->punchangle		= ent->v.punchangle;
 
 	cd->bInDuck			= ent->v.bInDuck;
