@@ -838,6 +838,7 @@ public:
 	void	Move( CBaseEntity *pMover, int push );
 	void	KeyValue( KeyValueData *pkvd );
 	void	Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
+	void	EXPORT GravityThink( void );
 	void	EXPORT StopSound( void );
 //	virtual void	SetActivator( CBaseEntity *pActivator ) { m_pPusher = pActivator; }
 
@@ -881,6 +882,10 @@ void CPushable :: Spawn( void )
 	pev->movetype	= MOVETYPE_PUSHSTEP;
 	pev->solid		= SOLID_BBOX;
 	SET_MODEL( ENT(pev), STRING(pev->model) );
+	if ( CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_pushables" ) == 1 )
+		pev->gravity = pev->gravity ? -fabs( pev->gravity ) : -1;
+	SetThink( GravityThink );
+	pev->nextthink = gpGlobals->time + 0.1;
 
 	if ( pev->friction > 399 )
 		pev->friction = 399;
@@ -895,6 +900,20 @@ void CPushable :: Spawn( void )
 	// Multiply by area of the box's cross-section (assume 1000 units^3 standard volume)
 	pev->skin = ( pev->skin * (pev->maxs.x - pev->mins.x) * (pev->maxs.y - pev->mins.y) ) * 0.0005;
 	m_soundTime = 0;
+}
+
+void CPushable::GravityThink( void )
+{
+	float gravity = pev->gravity ? fabs( pev->gravity ) : 1;
+	BOOL upsideDown = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_pushables" ) == 1;
+
+	if ( upsideDown && pev->gravity > 0 )
+	{
+		ClearBits( pev->flags, FL_ONGROUND );
+		pev->groundentity = NULL;
+	}
+	pev->gravity = upsideDown ? -gravity : gravity;
+	pev->nextthink = gpGlobals->time + 0.1;
 }
 
 

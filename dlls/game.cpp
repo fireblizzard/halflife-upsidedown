@@ -43,6 +43,7 @@ cvar_t	teamoverride = {"mp_teamoverride","1" };
 cvar_t	defaultteam = {"mp_defaultteam","0" };
 cvar_t	allowmonsters={"mp_allowmonsters","0", FCVAR_SERVER };
 cvar_t	ud_upsidedown={"ud_upsidedown","1", FCVAR_SERVER };
+cvar_t	ud_pushables={"ud_pushables","1", FCVAR_SERVER };
 cvar_t	ud_throwables={"ud_throwables","1", FCVAR_SERVER };
 
 cvar_t	debugpath = {"kc_debug_monster_path_search", "0", FCVAR_SERVER };
@@ -487,6 +488,7 @@ void GameDLLInit( void )
 	CVAR_REGISTER (&defaultteam);
 	CVAR_REGISTER (&allowmonsters);
 	CVAR_REGISTER (&ud_upsidedown);
+	CVAR_REGISTER (&ud_pushables);
 	CVAR_REGISTER (&ud_throwables);
 
 	CVAR_REGISTER (&debugpath);
