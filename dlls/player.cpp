@@ -2062,6 +2062,7 @@ void CBasePlayer::PreThink(void)
 	m_afButtonReleased = buttonsChanged & (~pev->button);	// The ones not down are "released"
 	g_engfuncs.pfnSetPhysicsKeyValue( edict(), "autojump", CVAR_GET_FLOAT( "ud_autojump" ) == 1 ? "1" : "0" );
 	g_engfuncs.pfnSetPhysicsKeyValue( edict(), "upsidedown", upsideDown ? "1" : "0" );
+	g_engfuncs.pfnSetPhysicsKeyValue( edict(), "headcrabboost", m_flUpsideDownBoost > 0 ? "1" : "0" );
 	if ( pev->deadflag == DEAD_NO &&
 		 ( ( upsideDown && pev->view_ofs.z > 0 ) || ( !upsideDown && pev->view_ofs.z < 0 ) ) )
 		pev->view_ofs.z = -pev->view_ofs.z;
@@ -2795,6 +2796,11 @@ void CBasePlayer :: UpdatePlayerSound ( void )
 }
 
 
+void CBasePlayer::QueueUpsideDownBoost( float speed )
+{
+	m_flUpsideDownBoost += speed;
+}
+
 void CBasePlayer::PostThink()
 {
 	if ( g_fGameOver )
@@ -2802,6 +2808,11 @@ void CBasePlayer::PostThink()
 
 	if (!IsAlive())
 		goto pt_end;
+
+	if ( m_flUpsideDownBoost > 0 && pev->velocity.z < 0 )
+	{
+		m_flUpsideDownBoost = 0;
+	}
 
 	// Handle Tank controlling
 	if ( m_pTank != NULL )

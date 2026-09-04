@@ -127,6 +127,7 @@ typedef struct hull_s
 #define PLAYER_FALL_PUNCH_THRESHHOLD (float)350 // won't punch player's screen/make scrape noise unless player falling at least this fast.
 
 #define PLAYER_LONGJUMP_SPEED 350 // how fast we longjump
+#define HEADCRAB_BOOST_SPEED 50.0f
 
 // double to float warning
 #pragma warning(disable : 4244)
@@ -2627,6 +2628,12 @@ void PM_Jump (void)
 	else
 	{
 		pmove->velocity[2] = -PM_GravityDirection() * sqrt(2 * 800 * 45.0);
+	}
+
+	if ( PM_IsUpsideDown() &&
+		atoi( pmove->PM_Info_ValueForKey( pmove->physinfo, "headcrabboost" ) ) == 1 )
+	{
+		pmove->velocity[2] -= HEADCRAB_BOOST_SPEED;
 	}
 
 	// Decay it for simulation

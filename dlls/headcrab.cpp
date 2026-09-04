@@ -20,6 +20,7 @@
 #include	"util.h"
 #include	"cbase.h"
 #include	"monsters.h"
+#include	"player.h"
 #include	"schedule.h"
 #include    "killcounter.h"
 
@@ -225,7 +226,10 @@ void CHeadCrab :: HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
 		case HC_AE_JUMPATTACK:
 		{
+			BOOL upsideDown = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_headcrabs" ) == 1;
+
 			ClearBits( pev->flags, FL_ONGROUND );
+			pev->gravity = upsideDown ? -1 : 1;
 
 			UTIL_SetOrigin (pev, pev->origin + Vector ( 0 , 0 , 1) );// take him off ground so engine doesn't instantly reset onground 
 			UTIL_MakeVectors ( pev->angles );
@@ -365,9 +369,16 @@ void CHeadCrab :: LeapTouch ( CBaseEntity *pOther )
 	// Don't hit if back on ground
 	if ( !FBitSet( pev->flags, FL_ONGROUND ) )
 	{
+		BOOL boostUpsideDownPlayer = pOther->IsPlayer() &&
+			( !FBitSet( pOther->pev->flags, FL_ONGROUND ) ||
+			FBitSet( pOther->pev->button, IN_JUMP ) ) &&
+			CVAR_GET_FLOAT( "ud_upsidedown" ) == 1;
+
 		EMIT_SOUND_DYN( edict(), CHAN_WEAPON, RANDOM_SOUND_ARRAY(pBiteSounds), GetSoundVolue(), ATTN_IDLE, 0, GetVoicePitch() );
 		
 		pOther->TakeDamage( pev, pev, GetDamageAmount(), DMG_SLASH );
+		if ( boostUpsideDownPlayer )
+			((CBasePlayer *)pOther)->QueueUpsideDownBoost( 1.0 );
 	}
 
 	SetTouch( NULL );
@@ -378,6 +389,11 @@ void CHeadCrab :: LeapTouch ( CBaseEntity *pOther )
 //=========================================================
 void CHeadCrab :: PrescheduleThink ( void )
 {
+	if ( FBitSet( pev->flags, FL_ONGROUND ) )
+		pev->gravity = 1;
+	else
+		pev->gravity = CVAR_GET_FLOAT( "ud_upsidedown" ) == 1 && CVAR_GET_FLOAT( "ud_headcrabs" ) == 1 ? -1 : 1;
+
 	// make the crab coo a little bit in combat state
 	if ( m_MonsterState == MONSTERSTATE_COMBAT && RANDOM_FLOAT( 0, 5 ) < 0.1 )
 	{

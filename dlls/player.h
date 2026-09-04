@@ -107,6 +107,7 @@ public:
 	float				m_flSwimTime;		// how long player has been underwater
 	float				m_flDuckTime;		// how long we've been ducking
 	float				m_flWallJumpTime;	// how long until next walljump
+	float				m_flUpsideDownBoost;
 
 	float				m_flSuitUpdate;					// when to play next suit update
 	int					m_rgSuitPlayList[CSUITPLAYLIST];// next sentencenum to play for suit update
@@ -195,6 +196,7 @@ public:
 	virtual void Duck( void );
 	virtual void PreThink( void );
 	virtual void PostThink( void );
+	void QueueUpsideDownBoost( float speed );  // Apply damageboost from headcrabs after physics is processed so it doesnt get overriden
 	virtual Vector GetGunPosition( void );
 	virtual int TakeHealth( float flHealth, int bitsDamageType );
 	virtual void TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType);

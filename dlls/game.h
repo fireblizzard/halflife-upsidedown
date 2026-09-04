@@ -41,6 +41,7 @@ extern cvar_t	ud_gauss_multiplayer;
 extern cvar_t	ud_autojump;
 extern cvar_t	ud_upsidedown;
 extern cvar_t	ud_pushables;
+extern cvar_t	ud_headcrabs;
 extern cvar_t	ud_throwables;
 
 // Engine Cvars
